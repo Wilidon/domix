@@ -1,0 +1,21 @@
+## PostgresSQL
+spring.datasource.url=jdbc:postgresql://127.0.0.1:5432/domix
+spring.datasource.username=ildar
+spring.datasource.password=0990
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+## SpringDataJPA
+spring.jpa.hibernate.ddl-auto=create
+spring.jpa.show-sql=true
+
+# swagger-ui custom path
+springdoc.swagger-ui.path=/docs
+server.port=8090
+
+spring.jpa.generate-ddl=true
+
+spring.jpa.defer-datasource-initialization=true
+
+spring.sql.init.mode=always
+
+jwt.secret.access=qBTmv4oXFFR2GwjexDJ4t6fsIUIUhhXqlktXjXdkcyygs8nPVEwMfo29VDRRepYDVV5IkIxBMzr7OEHXEHd37w==
