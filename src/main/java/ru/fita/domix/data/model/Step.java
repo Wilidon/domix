@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import ru.fita.domix.data.model.Component;
 
 import java.util.Set;
 
@@ -24,7 +23,7 @@ public class Step {
     @OrderBy("\"order\" ASC")
     private short order;
 
-    private boolean multitypeSelect;
+    private boolean multipleSelect;
 
     @OneToMany(mappedBy = "step")
     @JsonManagedReference
