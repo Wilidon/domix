@@ -17,8 +17,8 @@ public class Calculator {
 
     private String name;
 
-    // TODO change enum
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private CalculatorStatus status = CalculatorStatus.ACTIVE;
 
     @OneToMany(mappedBy = "calculator")
     private Set<Step> steps;
