@@ -13,6 +13,6 @@ jobs:
       - name: application.properties
         run: cp /home/wilidon/actions-runner/configs/application.properties /home/wilidon/actions-runner/_work/domix/domix/src/main/resources/
       - name: Stop
-        run: docker-compose down
-      - name: docker-compose
+        run: docker compose down
+      - name: docker compose
         run: docker compose up -d --no-deps --build domix-back
