@@ -11,7 +11,7 @@ jobs:
       - name: checkout repo
         uses: actions/checkout@v3
       - name: application.properties
-        run: cp /home/wilidon/actions-runner/configs/application.properties /home/wilidon/actions-runner/_work/domix/domix/src/main/resources/
+        run: cp /home/domix/actions-runner/configs/application.properties /home/domix/actions-runner/_work/domix/domix/src/main/resources/
       - name: Stop
         run: docker compose down
       - name: docker compose
