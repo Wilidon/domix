@@ -15,7 +15,6 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '17'
-          cache: maven
       - name: run tests
         run: mvn test
   deploy:
@@ -25,7 +24,7 @@ jobs:
       - name: checkout repo
         uses: actions/checkout@v3
       - name: application.properties
-        run: cp /home/wilidon/actions-runner/application.properties /home/maile/actions-runner/_work/domix/domix/src/main/resources/
+        run: cp /home/wilidon/actions-runner/application.properties /home/wilidon/actions-runner/_work/domix/domix/src/main/resources/
       - name: Stop
         run: docker-compose down
       - name: docker-compose
