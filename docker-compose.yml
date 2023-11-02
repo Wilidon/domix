@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  maile-back:
+  domix-back:
     build: .
     image: domix-back
     container_name: domix-back-container
