@@ -1,10 +1,13 @@
 package ru.fita.domix.domain.calculator;
 
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.fita.domix.data.model.Calculator;
+import ru.fita.domix.data.model.CalculatorStatus;
 import ru.fita.domix.data.repository.CalculatorRepository;
 import ru.fita.domix.data.repository.StepRepository;
+import ru.fita.domix.domain.calculator.exceptions.NotFoundCalculatorException;
 
 @Service
 public class CalculatorService {
@@ -17,12 +20,10 @@ public class CalculatorService {
         this.stepRepository = stepRepository;
     }
 
-    public Calculator getStep() {
-        Calculator calculator = calculatorRepository.findByStatus("ok")
-                .orElseThrow(() -> new IllegalArgumentException("Не найдено"));
+    public Calculator getCalculator() {
 
-        return calculator;
-
+        return calculatorRepository.findByStatus(CalculatorStatus.ACTIVE)
+                .orElseThrow(NotFoundCalculatorException::new);
     }
 
 }
