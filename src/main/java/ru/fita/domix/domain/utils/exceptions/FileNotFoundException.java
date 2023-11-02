@@ -1,4 +1,4 @@
-package ru.fita.domix.domain.util.exceptions;
+package ru.fita.domix.domain.utils.exceptions;
 
 import ru.fita.domix.domain.exceptions.NotFoundException;
 

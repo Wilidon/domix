@@ -1,4 +1,4 @@
-package ru.fita.domix.domain.util;
+package ru.fita.domix.domain.utils;
 
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +8,7 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-import ru.fita.domix.domain.util.exceptions.FileNotFoundException;
+import ru.fita.domix.domain.utils.exceptions.FileNotFoundException;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
