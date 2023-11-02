@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  maile-back:
+    build: .
+    image: domix-back
+    container_name: domix-back-container
+    restart: always
+    ports:
+      - "8090:8090"
