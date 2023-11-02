@@ -12,6 +12,10 @@ spring.jpa.show-sql=true
 springdoc.swagger-ui.path=/docs
 server.port=8090
 
+## Utilities
+# File storage
+file-storage.upload-directory = # Requires ASCII!!!
+
 spring.jpa.generate-ddl=true
 
 spring.jpa.defer-datasource-initialization=true
