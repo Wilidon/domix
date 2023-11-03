@@ -4,12 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.fita.domix.data.model.CalculatorSteps;
-import ru.fita.domix.domain.calculator.CalculatorService;
+import ru.fita.domix.data.model.CalculatorStep;
 import ru.fita.domix.domain.step.StepService;
 
 @RestController
 @RequestMapping("/steps")
+@Deprecated(since = "0.1.1")
 public class StepController {
 
     private final StepService stepService;
@@ -28,7 +28,7 @@ public class StepController {
     public ResponseEntity<?> insertStep(@PathVariable long calculatorId,
                                         @PathVariable long stepId,
                                         @RequestParam short index){
-        CalculatorSteps calculatorStep = stepService.insertStep(calculatorId, stepId, index);
+        CalculatorStep calculatorStep = stepService.insertStep(calculatorId, stepId, index);
         if (calculatorStep == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

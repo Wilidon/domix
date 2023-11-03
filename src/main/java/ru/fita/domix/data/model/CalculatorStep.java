@@ -2,16 +2,15 @@ package ru.fita.domix.data.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+
 @Entity
-@Table(name = "CalculatorSteps")
+@Table
 @Getter
 @Setter
-public class CalculatorSteps {
+public class CalculatorStep {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,5 +24,6 @@ public class CalculatorSteps {
     @JoinColumn(name = "step_id")
     private Step step;
 
-    private short order1;
+    @Column(name = "\"order\"")
+    private short order;
 }

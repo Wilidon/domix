@@ -1,10 +1,9 @@
 package ru.fita.domix.domain.step;
 
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.fita.domix.data.model.Calculator;
-import ru.fita.domix.data.model.CalculatorSteps;
+import ru.fita.domix.data.model.CalculatorStep;
 import ru.fita.domix.data.model.Step;
 import ru.fita.domix.data.repository.CalculatorRepository;
 import ru.fita.domix.data.repository.CalculatorStepsRepository;
@@ -41,32 +40,32 @@ public class StepService {
         return step;
     }
 
-    public CalculatorSteps insertStep(long calculator_id, long step_id, short index){
+    public CalculatorStep insertStep(long calculator_id, long step_id, short index){
         Calculator calculator = calculatorRepository.findById(calculator_id).orElseThrow(NotFoundCalculatorException::new);
         Step step = stepRepository.findById(step_id).orElseThrow(NotFoundStepException::new);;
         if (calculator.getCalculatorSteps().size() < index){
             return null;
         }
-        Set<CalculatorSteps> stepsBigger = new HashSet<>();
-        for(CalculatorSteps stepAfterIndex : calculator.getCalculatorSteps()){
-            if(stepAfterIndex.getOrder1() >= index){
+        Set<CalculatorStep> stepsBigger = new HashSet<>();
+        for(CalculatorStep stepAfterIndex : calculator.getCalculatorSteps()){
+            if(stepAfterIndex.getOrder() >= index){
                 stepsBigger.add(stepAfterIndex);
             }
         }
-        for(CalculatorSteps calculatorStep : stepsBigger){
-            calculatorStep.setOrder1((short) (calculatorStep.getOrder1()+1));
+        for(CalculatorStep calculatorStep : stepsBigger){
+            calculatorStep.setOrder((short) (calculatorStep.getOrder()+1));
             calculatorStepsRepository.save(calculatorStep);
         }
-        CalculatorSteps calculatorStep = new CalculatorSteps();
+        CalculatorStep calculatorStep = new CalculatorStep();
         calculatorStep.setCalculator(calculator);
         calculatorStep.setStep(step);
-        calculatorStep.setOrder1(index);
+        calculatorStep.setOrder(index);
         calculatorStepsRepository.save(calculatorStep);
         return calculatorStep;
     }
 
 
-    public Set<CalculatorSteps> getSteps(long calculatorId){
+    public Set<CalculatorStep> getSteps(long calculatorId){
         Optional<Calculator> optionalCalculator = calculatorRepository.findById(calculatorId);
         if (optionalCalculator.isEmpty()){
             return null;
