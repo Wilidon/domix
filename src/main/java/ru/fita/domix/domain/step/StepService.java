@@ -81,4 +81,10 @@ public class StepService {
         }
         throw (new AlreadyUsingException());
     }
+
+    public void detachSteps(long calculatorId) {
+        Set<CalculatorStep> calculatorSteps = calculatorStepsRepository.findAllByCalculatorId(calculatorId);
+        calculatorSteps.forEach(x -> x.setCalculator(null));
+        calculatorStepsRepository.saveAll(calculatorSteps);
+    }
 }
