@@ -4,7 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class CalculatorInput {
+public class CalculatorRename {
+    private long id;
     @NotBlank
-    private String name;
+    private String newName;
 }
