@@ -9,6 +9,8 @@ import ru.fita.domix.data.repository.CalculatorRepository;
 import ru.fita.domix.data.repository.CalculatorStepsRepository;
 import ru.fita.domix.data.repository.StepRepository;
 import ru.fita.domix.domain.calculator.exceptions.NotFoundCalculatorException;
+import ru.fita.domix.domain.step.dto.StepInput;
+import ru.fita.domix.domain.step.dto.StepName;
 import ru.fita.domix.domain.step.exceptions.AlreadyUsingException;
 import ru.fita.domix.domain.step.exceptions.NotFoundStepException;
 
@@ -32,10 +34,10 @@ public class StepService {
     }
 
     //Создание шага без привязки к калькулятору
-    public Step createStep(String title, boolean multipleSelect) {
+    public Step createStep(StepInput stepInput) {
         Step step = new Step();
-        step.setTitle(title);
-        step.setMultipleSelect(multipleSelect);
+        step.setTitle(stepInput.getTitle());
+        step.setMultipleSelect(stepInput.isMultipleSelect());
         stepRepository.save(step);
         return step;
     }
@@ -66,11 +68,12 @@ public class StepService {
 
 
     public Set<CalculatorStep> getSteps(long calculatorId){
-        Optional<Calculator> optionalCalculator = calculatorRepository.findById(calculatorId);
-        if (optionalCalculator.isEmpty()){
-            return null;
-        }
+        calculatorRepository.findById(calculatorId).orElseThrow(NotFoundCalculatorException::new);
         return calculatorStepsRepository.findAllByCalculatorId(calculatorId);
+    }
+
+    public Step getStep(long stepId){
+        return stepRepository.findById(stepId).orElseThrow(NotFoundStepException::new);
     }
 
     public boolean deleteStep(long stepId) {
@@ -82,6 +85,12 @@ public class StepService {
         throw (new AlreadyUsingException());
     }
 
+    public Step renameStep(StepName stepName){
+        Step step = stepRepository.findById(stepName.getId()).orElseThrow(NotFoundStepException::new);;
+        step.setTitle(stepName.getTitle());
+        stepRepository.save(step);
+        return step;
+    }
     public void detachSteps(long calculatorId) {
         Set<CalculatorStep> calculatorSteps = calculatorStepsRepository.findAllByCalculatorId(calculatorId);
         calculatorSteps.forEach(x -> x.setCalculator(null));

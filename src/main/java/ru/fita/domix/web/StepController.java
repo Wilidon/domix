@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.fita.domix.data.model.CalculatorStep;
 import ru.fita.domix.domain.step.StepService;
+import ru.fita.domix.domain.step.dto.StepInput;
+import ru.fita.domix.domain.step.dto.StepName;
 
 @RestController
 @RequestMapping("/steps")
@@ -19,11 +21,11 @@ public class StepController {
         this.stepService = stepService;
     }
 
-    @GetMapping("/{calculatorId}")
+    @GetMapping("/{calculatorId}/allSteps")
     public ResponseEntity<?> getSteps(@PathVariable long calculatorId) {
         return ResponseEntity.ok(stepService.getSteps(calculatorId));
     }
-
+    //Вот это надо вероятно перенести в калькулятор
     @PostMapping("/{calculatorId}/{stepId}")
     public ResponseEntity<?> insertStep(@PathVariable long calculatorId,
                                         @PathVariable long stepId,
@@ -34,14 +36,26 @@ public class StepController {
         }
         return new ResponseEntity<>(calculatorStep, HttpStatus.OK);
     }
-
-    @PostMapping("/create")
-    public ResponseEntity<?> insertStep(@RequestParam String title,@RequestParam boolean multipleSelector){
-        return new ResponseEntity<>(stepService.createStep(title,multipleSelector), HttpStatus.OK);
+    //Это надо в калькулятор закинуть
+    @PostMapping("")
+    public ResponseEntity<?> createStep(@RequestBody StepInput stepInput){
+        return new ResponseEntity<>(stepService.createStep(stepInput), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{stepId}/delete")
+
+
+    @DeleteMapping("/{stepId}")
     public ResponseEntity<?> deleteStep(@PathVariable long stepId){
         return ResponseEntity.ok(stepService.deleteStep(stepId));
+    }
+
+    @GetMapping("/{stepId}")
+    public ResponseEntity<?> getStep(@PathVariable long stepId) {
+        return ResponseEntity.ok(stepService.getStep(stepId));
+    }
+
+    @PatchMapping("/{stepId}/rename")
+    public ResponseEntity<?> rename(@RequestBody StepName stepName) {
+        return ResponseEntity.ok(stepService.renameStep(stepName));
     }
 }
