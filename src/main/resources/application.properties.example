@@ -1,8 +1,24 @@
+### General ###
+server.port=8090
+
+### Datasource ###
+
 ## PostgresSQL
 spring.datasource.url=jdbc:postgresql://127.0.0.1:5432/domix
 spring.datasource.username=ildar
 spring.datasource.password=0990
 spring.datasource.driver-class-name=org.postgresql.Driver
+
+## SpringDataJPA
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+
+## Spring SQL ##
+spring.sql.init.mode=always
+
+# Debug #
+spring.jpa.generate-ddl=true
+spring.jpa.defer-datasource-initialization=true
 
 ## Minio S3
 s3-minio.endpoint=
@@ -11,22 +27,10 @@ s3-minio.secretKey=
 s3-minio.bucket=
 s3-minio.domain=
 
-## SpringDataJPA
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
-
-# swagger-ui custom path
-springdoc.swagger-ui.path=/docs
-server.port=8090
-
-## Utilities
-# File storage
-file-storage.upload-directory = # Requires ASCII!!!
-
-spring.jpa.generate-ddl=true
-
-spring.jpa.defer-datasource-initialization=true
-
-spring.sql.init.mode=always
-
+### Security ###
+## JWT ##
 jwt.secret.access=qBTmv4oXFFR2GwjexDJ4t6fsIUIUhhXqlktXjXdkcyygs8nPVEwMfo29VDRRepYDVV5IkIxBMzr7OEHXEHd37w==
+
+### Utilities ###
+## Swagger ##
+springdoc.swagger-ui.path=/docs
