@@ -7,10 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.fita.domix.data.model.Calculator;
 import ru.fita.domix.data.model.CalculatorStatus;
 import ru.fita.domix.data.repository.CalculatorRepository;
-import ru.fita.domix.domain.calculator.dto.CalculatorAccess;
 import ru.fita.domix.domain.calculator.dto.CalculatorInput;
 import ru.fita.domix.domain.calculator.dto.CalculatorOutput;
-import ru.fita.domix.domain.calculator.dto.CalculatorRename;
 import ru.fita.domix.domain.calculator.exceptions.NotFoundCalculatorException;
 import ru.fita.domix.domain.step.StepService;
 import ru.fita.domix.domain.util.DtoMapper;
@@ -75,26 +73,26 @@ public class CalculatorService {
     }
 
     @Transactional
-    public CalculatorOutput activateCalculator(CalculatorAccess calculatorAccess) {
-        Calculator calculator = calculatorRepository.findById(calculatorAccess.getId())
+    public CalculatorOutput activateCalculator(long id) {
+        Calculator calculator = calculatorRepository.findById(id)
                 .orElseThrow(NotFoundCalculatorException::new);
 
         return activateCalculator(calculator);
     }
 
     @Transactional
-    public CalculatorOutput renameCalculator(CalculatorRename calculatorRename) {
-        Calculator calculator = calculatorRepository.findById(calculatorRename.getId())
+    public CalculatorOutput renameCalculator(long id, CalculatorInput calculatorInput) {
+        Calculator calculator = calculatorRepository.findById(id)
                 .orElseThrow(NotFoundCalculatorException::new);
-        calculator.setName(calculatorRename.getNewName());
+        calculator.setName(calculatorInput.getName());
         calculatorRepository.save(calculator);
 
         return outputMapper.toDto(calculator);
     }
 
     @Transactional
-    public void deleteCalculator(CalculatorAccess calculatorAccess) {
-        stepService.detachSteps(calculatorAccess.getId());
-        calculatorRepository.deleteById(calculatorAccess.getId());
+    public void deleteCalculator(long id) {
+        stepService.detachSteps(id);
+        calculatorRepository.deleteById(id);
     }
 }

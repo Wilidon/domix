@@ -11,9 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.fita.domix.domain.calculator.CalculatorService;
 import ru.fita.domix.domain.calculator.dto.CalculatorOutput;
-import ru.fita.domix.domain.calculator.dto.CalculatorAccess;
 import ru.fita.domix.domain.calculator.dto.CalculatorInput;
-import ru.fita.domix.domain.calculator.dto.CalculatorRename;
 
 @RestController
 @RequestMapping("/calculators")
@@ -43,16 +41,46 @@ public class CalculatorController {
     }
 
     @GetMapping("/{id}")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Возвращает калькулятор по полученному ID.",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = CalculatorOutput.class))
+                    })
+    })
     public ResponseEntity<?> getById(@PathVariable long id) {
         return ResponseEntity.ok(calculatorService.getById(id));
     }
 
     @GetMapping("")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Возвращает все существующие калькуляторы.",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = CalculatorOutput.class))
+                    })
+    })
     public ResponseEntity<?> getAll() {
         return ResponseEntity.ok(calculatorService.getAll());
     }
 
-    @PostMapping("/create")
+    @PostMapping("")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Создаёт калькулятор с введённым именем. Возвращает созданный калькулятор.",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = CalculatorOutput.class))
+                    })
+    })
     public ResponseEntity<?> createCalculator(@RequestBody CalculatorInput calculatorInput) {
         return ResponseEntity.ok(calculatorService.createCalculator(calculatorInput));
     }
@@ -63,16 +91,42 @@ public class CalculatorController {
         return ResponseEntity.ok(" ");
     }
 
-    @PatchMapping("/activate")
-    public ResponseEntity<?> activate(@RequestBody CalculatorAccess calculatorAccess) { return ResponseEntity.ok(calculatorService.activateCalculator(calculatorAccess));}
+    @PatchMapping("/{id}/activate")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Активирует калькулятор по указанному в пути ID. Возвращает активированный калькулятор.",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = CalculatorOutput.class))
+                    })
+    })
+    public ResponseEntity<?> activate(@PathVariable long id) { return ResponseEntity.ok(calculatorService.activateCalculator(id));}
 
-    @PatchMapping("/rename")
-    public ResponseEntity<?> rename(@RequestBody CalculatorRename calculatorRename) {
-        return ResponseEntity.ok(calculatorService.renameCalculator(calculatorRename));
+    @PatchMapping("/{id}/rename")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Переименовывает калькулятор введёным именем по указанному ID. Возвращает переименнованный калькулятор.",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = CalculatorOutput.class))
+                    })
+    })
+    public ResponseEntity<?> rename(@PathVariable long id, @RequestBody CalculatorInput calculatorInput) {
+        return ResponseEntity.ok(calculatorService.renameCalculator(id, calculatorInput));
     }
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> delete(@RequestBody CalculatorAccess calculatorAccess) {
-        calculatorService.deleteCalculator(calculatorAccess);
+    @DeleteMapping("/{id}/delete")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Удаляет калькулятор по указанному в пути ID."
+                    )
+    })
+    public ResponseEntity<?> delete(@PathVariable long id) {
+        calculatorService.deleteCalculator(id);
         return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }
 }
