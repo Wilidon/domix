@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import ru.fita.domix.data.model.*;
 import ru.fita.domix.domain.calculator.dto.CalculatorOutput;
 import ru.fita.domix.domain.step.dto.ComponentOutput;
+import ru.fita.domix.domain.step.dto.OnlyStepOutput;
 import ru.fita.domix.domain.step.dto.StepOutput;
 
 import java.util.LinkedHashSet;
@@ -56,4 +57,22 @@ public class CalcMapper {
         calculatorOutput.setSteps(mapStepToList(calculator.getCalculatorSteps()));
         return calculatorOutput;
     }
+
+    public OnlyStepOutput mapToOnlyStepOutput(Step step) {
+        OnlyStepOutput stepOutput = new OnlyStepOutput();
+        stepOutput.setId(step.getId());
+        stepOutput.setTitle(step.getTitle());
+        stepOutput.setMultipleSelect(step.isMultipleSelect());
+
+        return stepOutput;
+    }
+
+    public Set<OnlyStepOutput> mapStepToOnlyStepList(Set<CalculatorStep> calculatorSteps) {
+        Set<OnlyStepOutput> stepOutputs = new LinkedHashSet<>();
+        for (CalculatorStep calculatorStep : calculatorSteps) {
+            stepOutputs.add(mapToOnlyStepOutput(calculatorStep.getStep()));
+        }
+        return stepOutputs;
+    }
+
 }

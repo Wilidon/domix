@@ -1,10 +1,10 @@
 package ru.fita.domix.domain.calculator.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
 public class CalculatorInput {
-    private long id;
-
+    @NotBlank
     private String name;
 }
