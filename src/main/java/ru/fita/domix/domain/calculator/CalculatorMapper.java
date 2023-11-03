@@ -8,6 +8,7 @@ import ru.fita.domix.data.model.Step;
 import ru.fita.domix.domain.calculator.dto.CalculatorOutput;
 import ru.fita.domix.domain.step.dto.StepOutput;
 import ru.fita.domix.domain.util.DtoMapper;
+import ru.fita.domix.domain.util.StreamReverser;
 
 import java.util.stream.Collectors;
 
@@ -26,13 +27,15 @@ public class CalculatorMapper implements DtoMapper<Calculator, CalculatorOutput>
         output.setName(model.getName());
         output.setStatus(model.getStatus());
         output.setSteps(
-                model.getCalculatorSteps()
-                        .stream()
-                        .map(
-                                x -> stepMapper.toDto(
-                                        x.getStep()
-                                )
-                        )
+               StreamReverser.reverse(
+                               model.getCalculatorSteps()
+                                       .stream()
+                                       .map(
+                                               x -> stepMapper.toDto(
+                                                       x.getStep()
+                                               )
+                                       )
+                       )
                         .collect(Collectors.toSet()));
         return output;
     }
