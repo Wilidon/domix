@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import ru.fita.domix.domain.calculator.CalculatorService;
 import ru.fita.domix.domain.calculator.dto.CalculatorOutput;
 import ru.fita.domix.domain.calculator.dto.CalculatorInput;
+import ru.fita.domix.domain.step.dto.OnlyStepOutput;
+
+import java.util.Set;
 
 @RestController
 @RequestMapping("/calculators")
@@ -23,36 +26,6 @@ public class CalculatorController {
     @Autowired
     public CalculatorController(CalculatorService calculatorService) {
         this.calculatorService = calculatorService;
-    }
-
-    @GetMapping("/active")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Возвращает калькулятор, который активен в данный момент.",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = CalculatorOutput.class))
-                    })
-    })
-    public ResponseEntity<CalculatorOutput> getActualCalc() {
-        return ResponseEntity.ok(calculatorService.getCalculator());
-    }
-
-    @GetMapping("/{id}")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Возвращает калькулятор по полученному ID.",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = CalculatorOutput.class))
-                    })
-    })
-    public ResponseEntity<?> getById(@PathVariable long id) {
-        return ResponseEntity.ok(calculatorService.getById(id));
     }
 
     @GetMapping("")
@@ -70,6 +43,21 @@ public class CalculatorController {
         return ResponseEntity.ok(calculatorService.getAll());
     }
 
+    @GetMapping("/{id}")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Возвращает калькулятор по полученному ID.",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = CalculatorOutput.class))
+                    })
+    })
+    public ResponseEntity<?> getById(@PathVariable long id) {
+        return ResponseEntity.ok(calculatorService.getById(id));
+    }
+
     @PostMapping("")
     @ApiResponses(value = {
             @ApiResponse(
@@ -85,10 +73,25 @@ public class CalculatorController {
         return ResponseEntity.ok(calculatorService.createCalculator(calculatorInput));
     }
 
-    @Deprecated(since = "0.1.1")
-    @PostMapping("/{calculatorId}/steps/{stepId}")
-    public ResponseEntity<?> createStep() {
-        return ResponseEntity.ok(" ");
+    @GetMapping("/active")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Возвращает калькулятор, который активен в данный момент.",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = CalculatorOutput.class))
+                    })
+    })
+    public ResponseEntity<CalculatorOutput> getActualCalc() {
+        return ResponseEntity.ok(calculatorService.getCalculator());
+    }
+
+    @GetMapping("/{id}/steps")
+    public ResponseEntity<Set<OnlyStepOutput>> getAllSteps(@PathVariable("id") long calculatorId) {
+        Set<OnlyStepOutput> onlyStepOutputs = calculatorService.getCalculatorSteps(calculatorId);
+        return ResponseEntity.ok(onlyStepOutputs);
     }
 
     @PatchMapping("/{id}/activate")
@@ -102,9 +105,11 @@ public class CalculatorController {
                                     schema = @Schema(implementation = CalculatorOutput.class))
                     })
     })
-    public ResponseEntity<?> activate(@PathVariable long id) { return ResponseEntity.ok(calculatorService.activateCalculator(id));}
+    public ResponseEntity<?> activate(@PathVariable long id) {
+        return ResponseEntity.ok(calculatorService.activateCalculator(id));
+    }
 
-    @PatchMapping("/{id}/rename")
+    @PatchMapping("/{id}")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -118,12 +123,13 @@ public class CalculatorController {
     public ResponseEntity<?> rename(@PathVariable long id, @RequestBody CalculatorInput calculatorInput) {
         return ResponseEntity.ok(calculatorService.renameCalculator(id, calculatorInput));
     }
-    @DeleteMapping("/{id}/delete")
+
+    @DeleteMapping("/{id}")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "204",
                     description = "Удаляет калькулятор по указанному в пути ID."
-                    )
+            )
     })
     public ResponseEntity<?> delete(@PathVariable long id) {
         calculatorService.deleteCalculator(id);

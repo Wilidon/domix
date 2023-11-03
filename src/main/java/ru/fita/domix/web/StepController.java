@@ -6,12 +6,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.fita.domix.data.model.CalculatorStep;
 import ru.fita.domix.domain.step.StepService;
+import ru.fita.domix.domain.step.dto.OnlyStepOutput;
 import ru.fita.domix.domain.step.dto.StepInput;
 import ru.fita.domix.domain.step.dto.StepName;
 
 @RestController
 @RequestMapping("/steps")
-@Deprecated(since = "0.1.1")
 public class StepController {
 
     private final StepService stepService;
@@ -21,12 +21,9 @@ public class StepController {
         this.stepService = stepService;
     }
 
-    @GetMapping("/{calculatorId}/allSteps")
-    public ResponseEntity<?> getSteps(@PathVariable long calculatorId) {
-        return ResponseEntity.ok(stepService.getSteps(calculatorId));
-    }
     //Вот это надо вероятно перенести в калькулятор
-    @PostMapping("/{calculatorId}/{stepId}")
+    @PostMapping("/{calculatorId}/{id}")
+    @Deprecated(since = "0.1.1")
     public ResponseEntity<?> insertStep(@PathVariable long calculatorId,
                                         @PathVariable long stepId,
                                         @RequestParam short index){
@@ -36,26 +33,28 @@ public class StepController {
         }
         return new ResponseEntity<>(calculatorStep, HttpStatus.OK);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getStep(@PathVariable("id") long stepId) {
+        return ResponseEntity.ok(stepService.getStep(stepId));
+    }
+
     //Это надо в калькулятор закинуть
     @PostMapping("")
-    public ResponseEntity<?> createStep(@RequestBody StepInput stepInput){
-        return new ResponseEntity<>(stepService.createStep(stepInput), HttpStatus.OK);
+    public ResponseEntity<OnlyStepOutput> createStep(@RequestBody StepInput stepInput){
+        return new ResponseEntity<OnlyStepOutput>(stepService.createStep(stepInput), HttpStatus.OK);
     }
 
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> rename(@PathVariable("id") long stepId,
+                                    @RequestBody StepName stepName) {
+        return ResponseEntity.ok(stepService.renameStep(stepId, stepName));
+    }
 
-    @DeleteMapping("/{stepId}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteStep(@PathVariable long stepId){
         return ResponseEntity.ok(stepService.deleteStep(stepId));
     }
 
-    @GetMapping("/{stepId}")
-    public ResponseEntity<?> getStep(@PathVariable long stepId) {
-        return ResponseEntity.ok(stepService.getStep(stepId));
-    }
-
-    @PatchMapping("/{stepId}/rename")
-    public ResponseEntity<?> rename(@RequestBody StepName stepName) {
-        return ResponseEntity.ok(stepService.renameStep(stepName));
-    }
 }

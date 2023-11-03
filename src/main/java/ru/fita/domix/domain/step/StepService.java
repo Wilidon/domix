@@ -9,21 +9,18 @@ import ru.fita.domix.data.model.Step;
 import ru.fita.domix.data.repository.CalculatorRepository;
 import ru.fita.domix.data.repository.CalculatorStepsRepository;
 import ru.fita.domix.data.repository.StepRepository;
-import ru.fita.domix.domain.calculator.dto.CalculatorOutput;
+import ru.fita.domix.domain.calculator.CalcMapper;
 import ru.fita.domix.domain.calculator.exceptions.NotFoundCalculatorException;
+import ru.fita.domix.domain.step.dto.OnlyStepOutput;
 import ru.fita.domix.domain.step.dto.StepInput;
 import ru.fita.domix.domain.step.dto.StepName;
 import ru.fita.domix.domain.step.dto.StepOutput;
 import ru.fita.domix.domain.step.exceptions.AlreadyUsingException;
 import ru.fita.domix.domain.step.exceptions.NotFoundStepException;
 import ru.fita.domix.domain.util.DtoMapper;
-import ru.fita.domix.domain.step.StepMapper;
 
 import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class StepService {
@@ -34,38 +31,42 @@ public class StepService {
 
     private final DtoMapper<Step, StepOutput> outputMapper;
 
+    private final CalcMapper calcMapper;
+
     @Autowired
     public StepService(CalculatorRepository calculatorRepository, StepRepository stepRepository,
-                       CalculatorStepsRepository calculatorStepsRepository, @Qualifier("stepMapper") DtoMapper<Step, StepOutput> outputMapper) {
+                       CalculatorStepsRepository calculatorStepsRepository, @Qualifier("stepMapper") DtoMapper<Step, StepOutput> outputMapper, CalcMapper calcMapper) {
         this.calculatorRepository = calculatorRepository;
         this.stepRepository = stepRepository;
         this.calculatorStepsRepository = calculatorStepsRepository;
         this.outputMapper = outputMapper;
+        this.calcMapper = calcMapper;
     }
 
     //Создание шага без привязки к калькулятору
-    public StepOutput createStep(StepInput stepInput) {
+    public OnlyStepOutput createStep(StepInput stepInput) {
         Step step = new Step();
         step.setTitle(stepInput.getTitle());
         step.setMultipleSelect(stepInput.isMultipleSelect());
         stepRepository.save(step);
-        return outputMapper.toDto(step);
+        return calcMapper.mapToOnlyStepOutput(step);
     }
 
-    public CalculatorStep insertStep(long calculator_id, long step_id, short index){
+    public CalculatorStep insertStep(long calculator_id, long step_id, short index) {
         Calculator calculator = calculatorRepository.findById(calculator_id).orElseThrow(NotFoundCalculatorException::new);
-        Step step = stepRepository.findById(step_id).orElseThrow(NotFoundStepException::new);;
-        if (calculator.getCalculatorSteps().size() < index){
+        Step step = stepRepository.findById(step_id).orElseThrow(NotFoundStepException::new);
+        ;
+        if (calculator.getCalculatorSteps().size() < index) {
             return null;
         }
         Set<CalculatorStep> stepsBigger = new HashSet<>();
-        for(CalculatorStep stepAfterIndex : calculator.getCalculatorSteps()){
-            if(stepAfterIndex.getOrder() >= index){
+        for (CalculatorStep stepAfterIndex : calculator.getCalculatorSteps()) {
+            if (stepAfterIndex.getOrder() >= index) {
                 stepsBigger.add(stepAfterIndex);
             }
         }
-        for(CalculatorStep calculatorStep : stepsBigger){
-            calculatorStep.setOrder((short) (calculatorStep.getOrder()+1));
+        for (CalculatorStep calculatorStep : stepsBigger) {
+            calculatorStep.setOrder((short) (calculatorStep.getOrder() + 1));
             calculatorStepsRepository.save(calculatorStep);
         }
         CalculatorStep calculatorStep = new CalculatorStep();
@@ -77,35 +78,29 @@ public class StepService {
     }
 
 
-    public List<StepOutput> getSteps(long calculatorId){
-        calculatorRepository.findById(calculatorId).orElseThrow(NotFoundCalculatorException::new);
-        Set<CalculatorStep> calculatorSteps =  calculatorStepsRepository.findAllByCalculatorId(calculatorId);
-        Set<Step> steps = new HashSet<>();
-        for (CalculatorStep calculatorStep : calculatorSteps){
-            steps.add(calculatorStep.getStep());
-        }
-        return  steps.stream().map(outputMapper::toDto).collect(Collectors.toList());
-    }
 
-    public StepOutput getStep(long stepId){
+
+    public StepOutput getStep(long stepId) {
         return outputMapper.toDto(stepRepository.findById(stepId).orElseThrow(NotFoundStepException::new));
     }
 
     public boolean deleteStep(long stepId) {
-        Step step = stepRepository.findById(stepId).orElseThrow(NotFoundStepException::new);;
-        if(calculatorStepsRepository.findAllByStepId(stepId).isEmpty()){
+        Step step = stepRepository.findById(stepId).orElseThrow(NotFoundStepException::new);
+        ;
+        if (calculatorStepsRepository.findAllByStepId(stepId).isEmpty()) {
             stepRepository.delete(step);
             return true;
         }
         throw (new AlreadyUsingException());
     }
 
-    public StepOutput renameStep(StepName stepName){
-        Step step = stepRepository.findById(stepName.getId()).orElseThrow(NotFoundStepException::new);;
+    public StepOutput renameStep(long stepId, StepName stepName) {
+        Step step = stepRepository.findById(stepId).orElseThrow(NotFoundStepException::new);
         step.setTitle(stepName.getTitle());
         stepRepository.save(step);
         return outputMapper.toDto(step);
     }
+
     public void detachSteps(long calculatorId) {
         Set<CalculatorStep> calculatorSteps = calculatorStepsRepository.findAllByCalculatorId(calculatorId);
         calculatorSteps.forEach(x -> x.setCalculator(null));
