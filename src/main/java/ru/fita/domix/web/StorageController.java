@@ -2,6 +2,7 @@ package ru.fita.domix.web;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.apache.commons.compress.utils.FileNameUtils;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,8 @@ public class StorageController {
             consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
     private ResponseEntity<StorageOutput> uploadImage(@RequestPart(name = "file") MultipartFile image) throws IOException {
-        StorageOutput storageOutput = storageService.saveFile(image.getInputStream());
+        String extension = FileNameUtils.getExtension(image.getOriginalFilename());
+        StorageOutput storageOutput = storageService.saveFile(extension, image.getInputStream());
 
         return ResponseEntity.ok(storageOutput);
 

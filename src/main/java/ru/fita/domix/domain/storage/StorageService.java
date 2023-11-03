@@ -26,8 +26,8 @@ public class StorageService {
         this.s3Bucket = s3Bucket;
     }
 
-    public StorageOutput saveFile(InputStream inputStream) {
-        String filename = UUID.randomUUID().toString();
+    public StorageOutput saveFile(String extension, InputStream inputStream) {
+        String filename = UUID.randomUUID() + "." + extension;
         storage.saveFile(filename, inputStream);
         String urlToFile = this.s3Domain + "/" + this.s3Bucket + "/" + filename;
 

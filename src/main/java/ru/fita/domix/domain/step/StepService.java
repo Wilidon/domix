@@ -74,7 +74,7 @@ public class StepService {
         return calculatorStepsRepository.findAllByCalculatorId(calculatorId);
     }
 
-    public boolean deleteStep(long stepId){
+    public boolean deleteStep(long stepId) {
         Step step = stepRepository.findById(stepId).orElseThrow(NotFoundStepException::new);;
         if(calculatorStepsRepository.findAllByStepId(stepId).isEmpty()){
             stepRepository.delete(step);

@@ -20,9 +20,13 @@ public class CalculatorController {
 
     @GetMapping("")
     public ResponseEntity<?> getActualCalc() {
-
         return ResponseEntity.ok(calculatorService.getCalculator());
     }
+
+//    @PostMapping("")
+//    public ResponseEntity<?> createCalculator() {
+//
+//    }
 
     @PostMapping("/{calculatorId}/steps/{stepId}")
     public ResponseEntity<?> createStep() {

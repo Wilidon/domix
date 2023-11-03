@@ -26,7 +26,6 @@ public class MinioS3 implements S3 {
                    @Value("${s3-minio.secretKey}") String secretKey,
                    @Value("${s3-minio.bucket}") String bucket) {
         this.bucket = bucket;
-        System.out.println("endpoint " + endpoint);
         minioClient =
                 MinioClient.builder().
                         endpoint(endpoint)

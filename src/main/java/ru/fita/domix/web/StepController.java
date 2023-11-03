@@ -25,7 +25,8 @@ public class StepController {
     }
 
     @PostMapping("/{calculatorId}/{stepId}")
-    public ResponseEntity<?> insertStep(@PathVariable long calculatorId,@PathVariable long stepId,
+    public ResponseEntity<?> insertStep(@PathVariable long calculatorId,
+                                        @PathVariable long stepId,
                                         @RequestParam short index){
         CalculatorSteps calculatorStep = stepService.insertStep(calculatorId, stepId, index);
         if (calculatorStep == null) {
