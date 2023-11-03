@@ -8,6 +8,8 @@ spring.datasource.driver-class-name=org.postgresql.Driver
 s3-minio.endpoint=
 s3-minio.accessKey=
 s3-minio.secretKey=
+s3-minio.bucket=
+s3-minio.domain=
 
 ## SpringDataJPA
 spring.jpa.hibernate.ddl-auto=update
