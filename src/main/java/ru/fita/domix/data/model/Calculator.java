@@ -1,14 +1,11 @@
 package ru.fita.domix.data.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -27,9 +24,9 @@ public class Calculator {
     @Enumerated(EnumType.STRING)
     private CalculatorStatus status = CalculatorStatus.ACTIVE;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "calculator")
-    private Set<CalculatorSteps> calculatorSteps;
+    @OrderBy("order asc")
+    private Set<CalculatorStep> calculatorSteps;
 
 
 
