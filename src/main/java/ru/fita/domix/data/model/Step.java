@@ -1,6 +1,7 @@
 package ru.fita.domix.data.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
@@ -9,6 +10,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -20,14 +22,10 @@ public class Step {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Min(value = 2)
     @NotNull
     @NotBlank
     private String title;
 
-    @Column(name = "\"order\"")
-    @OrderBy("\"order\" ASC")
-    private short order;
 
     private boolean multipleSelect = false;
 
@@ -35,8 +33,7 @@ public class Step {
     @JsonManagedReference
     private Set<Component> components;
 
-    @ManyToOne
-    @JoinColumn(name = "calculator_id")
-    @JsonBackReference
-    private Calculator calculator;
+    @JsonIgnore
+    @OneToMany(mappedBy = "step")
+    private Set<CalculatorSteps> calculatorSteps;
 }

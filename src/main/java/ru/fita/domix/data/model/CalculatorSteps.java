@@ -1,39 +1,29 @@
 package ru.fita.domix.data.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-
 @Entity
-@Table
+@Table(name = "CalculatorSteps")
 @Getter
 @Setter
-public class Component {
+public class CalculatorSteps {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    private String title;
-
-    @NotNull
-    @NotBlank
-    private String imageUrl;
-
-    @Min(value = 0)
-    private float price;
-
-    @Min(value = 0)
-    private float jobPrice;
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "calculator_id")
+    private Calculator calculator;
 
     @ManyToOne
     @JoinColumn(name = "step_id")
-    @JsonBackReference
     private Step step;
 
-
+    private short order1;
 }

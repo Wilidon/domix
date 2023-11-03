@@ -8,4 +8,6 @@ import java.util.Optional;
 
 public interface CalculatorRepository extends JpaRepository<Calculator, Long> {
     Optional<Calculator> findByStatus(CalculatorStatus status);
+
+    Optional<Calculator> findById(long id);
 }
