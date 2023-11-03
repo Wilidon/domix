@@ -22,7 +22,7 @@ public class Calculator {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    private CalculatorStatus status = CalculatorStatus.ACTIVE;
+    private CalculatorStatus status = CalculatorStatus.DISABLED;
 
     @OneToMany(mappedBy = "calculator")
     @OrderBy("order asc")
