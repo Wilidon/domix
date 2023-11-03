@@ -1,5 +1,9 @@
 package ru.fita.domix.web;
 
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.apache.commons.compress.utils.FileNameUtils;
@@ -24,6 +28,24 @@ public class StorageController {
             method = RequestMethod.POST,
             consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Метод для загрузки изображения в S3-хранилище. " +
+                            "Возвращает ссылку на файл. Максимальный размер файла - 10мб.",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = StorageOutput.class))
+                    }),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Ошибка на стороне сервера.",
+                    content = {
+                            @Content()
+                    }
+            )
+    })
     private ResponseEntity<StorageOutput> uploadImage(@RequestPart(name = "file") MultipartFile image) throws IOException {
         String extension = FileNameUtils.getExtension(image.getOriginalFilename());
         StorageOutput storageOutput = storageService.saveFile(extension, image.getInputStream());

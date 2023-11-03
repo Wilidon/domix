@@ -27,12 +27,23 @@ public class CalculatorController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Возвращает калькулятор, который активен в данный момент.",
+                    description = "Возвращает калькулятор, который активен в данный момент. " +
+                            "Одновременно может быть только один активный калькульлятор, " +
+                            "который будет выводиться " +
+                            "на главной странице сайта. Для смены калькулятора " +
+                            "необходимо воспользоваться методом /activate",
                     content = {
                             @Content(
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = CalculatorOutput.class))
-                    })
+                    }),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Возвращает 404, если не существует ни одного активного калькулятора.",
+                    content = {
+                            @Content()
+                    }
+            )
     })
     public ResponseEntity<CalculatorOutput> getActualCalc() {
         return ResponseEntity.ok(calculatorService.getCalculator());
