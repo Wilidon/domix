@@ -21,7 +21,6 @@ import ru.fita.domix.domain.step.exceptions.AlreadyUsingException;
 import ru.fita.domix.domain.step.exceptions.NotFoundStepException;
 import ru.fita.domix.domain.util.DtoMapper;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Service
@@ -41,7 +40,7 @@ public class StepService {
                        StepRepository stepRepository,
                        CalculatorStepsRepository calculatorStepsRepository,
                        @Qualifier("stepMapper") DtoMapper<Step, StepOutput> outputMapper,
-                       @Qualifier("calculatorMapper")  DtoMapper<Calculator, CalculatorOutput> calculatorOutputDtoMapper,
+                       @Qualifier("calculatorMapper") DtoMapper<Calculator, CalculatorOutput> calculatorOutputDtoMapper,
                        CalcMapper calcMapper) {
         this.calculatorRepository = calculatorRepository;
         this.stepRepository = stepRepository;
@@ -60,33 +59,6 @@ public class StepService {
         return calcMapper.mapToOnlyStepOutput(step);
     }
 
-    public CalculatorStep insertStep(long calculator_id, long step_id, short index) {
-        Calculator calculator = calculatorRepository.findById(calculator_id).orElseThrow(NotFoundCalculatorException::new);
-        Step step = stepRepository.findById(step_id).orElseThrow(NotFoundStepException::new);
-        ;
-        if (calculator.getCalculatorSteps().size() < index) {
-            return null;
-        }
-        Set<CalculatorStep> stepsBigger = new HashSet<>();
-        for (CalculatorStep stepAfterIndex : calculator.getCalculatorSteps()) {
-            if (stepAfterIndex.getOrder() >= index) {
-                stepsBigger.add(stepAfterIndex);
-            }
-        }
-        for (CalculatorStep calculatorStep : stepsBigger) {
-            calculatorStep.setOrder((short) (calculatorStep.getOrder() + 1));
-            calculatorStepsRepository.save(calculatorStep);
-        }
-        CalculatorStep calculatorStep = new CalculatorStep();
-        calculatorStep.setCalculator(calculator);
-        calculatorStep.setStep(step);
-        calculatorStep.setOrder(index);
-        calculatorStepsRepository.save(calculatorStep);
-        return calculatorStep;
-    }
-
-
-
 
     public StepOutput getStep(long stepId) {
         return outputMapper.toDto(stepRepository.findById(stepId).orElseThrow(NotFoundStepException::new));
@@ -102,11 +74,11 @@ public class StepService {
         throw (new AlreadyUsingException());
     }
 
-    public StepOutput renameStep(long stepId, StepName stepName) {
+    public OnlyStepOutput renameStep(long stepId, StepName stepName) {
         Step step = stepRepository.findById(stepId).orElseThrow(NotFoundStepException::new);
         step.setTitle(stepName.getTitle());
         stepRepository.save(step);
-        return outputMapper.toDto(step);
+        return calcMapper.mapToOnlyStepOutput(step);
     }
 
     public void detachSteps(long calculatorId) {
@@ -115,7 +87,7 @@ public class StepService {
         calculatorStepsRepository.saveAll(calculatorSteps);
     }
 
-    public Object getActiveSteps() {
+    public Set<OnlyStepOutput> getActiveSteps() {
         Calculator calculator = calculatorRepository.findByStatus(CalculatorStatus.ACTIVE)
                 .orElseThrow(NotFoundCalculatorException::new);
         return calcMapper.mapStepToOnlyStepList(calculator.getCalculatorSteps());

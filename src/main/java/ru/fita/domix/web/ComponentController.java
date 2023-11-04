@@ -1,0 +1,44 @@
+package ru.fita.domix.web;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import ru.fita.domix.data.model.CalculatorStep;
+import ru.fita.domix.domain.component.ComponentService;
+import ru.fita.domix.domain.component.dto.ComponentInput;
+import ru.fita.domix.domain.step.StepService;
+import ru.fita.domix.domain.step.dto.ComponentOutput;
+import ru.fita.domix.domain.step.dto.OnlyStepOutput;
+import ru.fita.domix.domain.step.dto.StepInput;
+import ru.fita.domix.domain.step.dto.StepName;
+
+@RestController
+@RequestMapping("/components")
+public class ComponentController {
+
+    private final ComponentService componentService;
+
+    @Autowired
+    public ComponentController(ComponentService componentService) {
+
+        this.componentService = componentService;
+    }
+
+    @PostMapping("")
+    public ResponseEntity<ComponentOutput> createComponent(@RequestBody ComponentInput componentInput){
+        return new ResponseEntity<ComponentOutput>(componentService.createComponent(componentInput), HttpStatus.OK);
+    }
+
+    @GetMapping("/{componentId}")
+    public ResponseEntity<?> getComponent(@PathVariable long componentId){
+        return ResponseEntity.ok(componentService.getComponent(componentId));
+    }
+
+    @DeleteMapping("/{componentId}")
+    public ResponseEntity<?> deleteComponent(@PathVariable long componentId){
+        return ResponseEntity.ok(componentService.deleteComponent(componentId));
+    }
+
+
+}

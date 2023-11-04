@@ -10,8 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.fita.domix.domain.calculator.CalculatorService;
-import ru.fita.domix.domain.calculator.dto.CalculatorOutput;
 import ru.fita.domix.domain.calculator.dto.CalculatorInput;
+import ru.fita.domix.domain.calculator.dto.CalculatorOutput;
 import ru.fita.domix.domain.step.dto.OnlyStepOutput;
 
 import java.util.Set;
@@ -71,6 +71,68 @@ public class CalculatorController {
     })
     public ResponseEntity<?> createCalculator(@RequestBody CalculatorInput calculatorInput) {
         return ResponseEntity.ok(calculatorService.createCalculator(calculatorInput));
+    }
+
+    @PostMapping("/{calculatorId}/steps/{stepId}")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Привязывает выбранный шаг к калькулятору. ",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = CalculatorOutput.class))
+                    }),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Если калькулятора или шага не существует",
+                    content = {
+                            @Content()
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Это шаг уже привязан к этому калькулятору.",
+                    content = {
+                            @Content()
+                    }
+            )
+    })
+    public ResponseEntity<?> bindStepToCalculator(@PathVariable("calculatorId") long calculatorId,
+                                                  @PathVariable("stepId") long stepId) {
+        calculatorService.bindStepToCalculator(calculatorId, stepId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{calculatorId}/steps/{stepId}")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Привязывает выбранный шаг к калькулятору. ",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = CalculatorOutput.class))
+                    }),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Если калькулятора или шага не существует",
+                    content = {
+                            @Content()
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Это шаг уже привязан к этому калькулятору.",
+                    content = {
+                            @Content()
+                    }
+            )
+    })
+    public ResponseEntity<?> unbindStepFromCalculator(@PathVariable("calculatorId") long calculatorId,
+                                                      @PathVariable("stepId") long stepId) {
+        calculatorService.unbindStepToCalculator(calculatorId, stepId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/active")
