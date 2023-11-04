@@ -14,10 +14,11 @@ public class RestResponseEntityExceptionHandler
         extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value
-            = { NotFoundException.class })
-    protected ResponseEntity<Object> handleConflict(
+            = { NotFoundException.class})
+    protected ResponseEntity<Object> handleNotFoundConflict(
             RuntimeException ex, WebRequest request) {
-        return handleExceptionInternal(ex, null,
+        String bodyOfResponse = "{\"message\":\"Not found " + ex.getMessage() +"\"}";
+        return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 }
