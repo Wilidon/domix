@@ -1,11 +1,11 @@
 package ru.fita.domix.web;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.apache.commons.compress.utils.FileNameUtils;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import ru.fita.domix.domain.storage.StorageService;
 import ru.fita.domix.domain.storage.dto.StorageOutput;
@@ -13,18 +13,13 @@ import ru.fita.domix.domain.storage.dto.StorageOutput;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/storages")
 @AllArgsConstructor
-@Tag(name = "S3-хранилище")
 @CrossOrigin(origins = "*")
-public class StorageController {
+public class StorageApiController implements StorageApi {
     private final StorageService storageService;
 
-    @RequestMapping(value = "",
-            method = RequestMethod.POST,
-            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
-            produces = {MediaType.APPLICATION_JSON_VALUE})
-    private ResponseEntity<StorageOutput> uploadImage(@RequestPart(name = "file") MultipartFile image) throws IOException {
+
+    public ResponseEntity<StorageOutput> uploadImage(@RequestPart(name = "file") MultipartFile image) throws IOException {
         String extension = FileNameUtils.getExtension(image.getOriginalFilename());
         StorageOutput storageOutput = storageService.saveFile(extension, image.getInputStream());
 
