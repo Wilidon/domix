@@ -13,6 +13,7 @@ import ru.fita.domix.domain.step.dto.StepName;
 
 @RestController
 @RequestMapping("/steps")
+@CrossOrigin(origins = "*")
 public class StepController {
 
     private final StepService stepService;
