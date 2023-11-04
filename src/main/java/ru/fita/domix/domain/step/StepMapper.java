@@ -9,6 +9,7 @@ import ru.fita.domix.domain.step.dto.ComponentOutput;
 import ru.fita.domix.domain.step.dto.StepOutput;
 import ru.fita.domix.domain.util.DtoMapper;
 
+import java.util.LinkedHashSet;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,12 +30,9 @@ public class StepMapper implements DtoMapper<Step, StepOutput> {
         stepOutput.setComponents(
                 model.getStepComponents()
                         .stream()
-                        .map(
-                                x -> componentMapper.toDto(
-                                        x.getComponent()
-                                )
+                        .map(x -> componentMapper.toDto(x.getComponent())
                         )
-                        .collect(Collectors.toSet()));
+                        .collect(Collectors.toCollection(LinkedHashSet::new)));
         return stepOutput;
     }
 }

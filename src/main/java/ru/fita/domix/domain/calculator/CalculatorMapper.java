@@ -8,8 +8,8 @@ import ru.fita.domix.data.model.Step;
 import ru.fita.domix.domain.calculator.dto.CalculatorOutput;
 import ru.fita.domix.domain.step.dto.StepOutput;
 import ru.fita.domix.domain.util.DtoMapper;
-import ru.fita.domix.domain.util.StreamReverser;
 
+import java.util.LinkedHashSet;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,6 +20,7 @@ public class CalculatorMapper implements DtoMapper<Calculator, CalculatorOutput>
     public CalculatorMapper(@Qualifier("stepMapper") DtoMapper<Step, StepOutput> stepMapper) {
         this.stepMapper = stepMapper;
     }
+
     @Override
     public CalculatorOutput toDto(Calculator model) {
         CalculatorOutput output = new CalculatorOutput();
@@ -29,17 +30,22 @@ public class CalculatorMapper implements DtoMapper<Calculator, CalculatorOutput>
         if (model.getCalculatorSteps() == null) {
             return output;
         }
+
+//        output.setSteps(
+//                model.getCalculatorSteps()
+//                        .stream()
+//                        .map( x -> new AbstractMap.SimpleEntry<>(x.getOrder(), stepMapper.toDto(x.getStep()))
+//                        )
+//                        .sorted(Map.Entry.comparingByKey())
+//                        .map(AbstractMap.SimpleEntry::getValue)
+//                        .collect(Collectors.toCollection(LinkedHashSet::new)));
+
         output.setSteps(
-               StreamReverser.reverse(
-                               model.getCalculatorSteps()
-                                       .stream()
-                                       .map(
-                                               x -> stepMapper.toDto(
-                                                       x.getStep()
-                                               )
-                                       )
-                       )
-                        .collect(Collectors.toSet()));
+                model.getCalculatorSteps()
+                        .stream()
+                        .map(x -> stepMapper.toDto(x.getStep()))
+                        .collect(Collectors.toCollection(LinkedHashSet::new))
+        );
         return output;
     }
 }
