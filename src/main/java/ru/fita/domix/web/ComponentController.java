@@ -40,5 +40,5 @@ public class ComponentController {
         return ResponseEntity.ok(componentService.deleteComponent(componentId));
     }
 
-
+    //Тут что-то новое
 }
