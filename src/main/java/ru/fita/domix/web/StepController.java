@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.fita.domix.data.model.CalculatorStep;
+import ru.fita.domix.domain.calculator.CalculatorService;
 import ru.fita.domix.domain.step.StepService;
 import ru.fita.domix.domain.step.dto.OnlyStepOutput;
 import ru.fita.domix.domain.step.dto.StepInput;
@@ -34,6 +35,10 @@ public class StepController {
         return new ResponseEntity<>(calculatorStep, HttpStatus.OK);
     }
 
+    @GetMapping("")
+    public ResponseEntity<?> getActiveSteps() {
+        return ResponseEntity.ok(stepService.getActiveSteps());
+    }
     @GetMapping("/{id}")
     public ResponseEntity<?> getStep(@PathVariable("id") long stepId) {
         return ResponseEntity.ok(stepService.getStep(stepId));

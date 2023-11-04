@@ -4,12 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.fita.domix.data.model.Calculator;
+import ru.fita.domix.data.model.CalculatorStatus;
 import ru.fita.domix.data.model.CalculatorStep;
 import ru.fita.domix.data.model.Step;
 import ru.fita.domix.data.repository.CalculatorRepository;
 import ru.fita.domix.data.repository.CalculatorStepsRepository;
 import ru.fita.domix.data.repository.StepRepository;
 import ru.fita.domix.domain.calculator.CalcMapper;
+import ru.fita.domix.domain.calculator.dto.CalculatorOutput;
 import ru.fita.domix.domain.calculator.exceptions.NotFoundCalculatorException;
 import ru.fita.domix.domain.step.dto.OnlyStepOutput;
 import ru.fita.domix.domain.step.dto.StepInput;
@@ -30,16 +32,22 @@ public class StepService {
     private final CalculatorStepsRepository calculatorStepsRepository;
 
     private final DtoMapper<Step, StepOutput> outputMapper;
+    private final DtoMapper<Calculator, CalculatorOutput> calculatorOutputDtoMapper;
 
     private final CalcMapper calcMapper;
 
     @Autowired
-    public StepService(CalculatorRepository calculatorRepository, StepRepository stepRepository,
-                       CalculatorStepsRepository calculatorStepsRepository, @Qualifier("stepMapper") DtoMapper<Step, StepOutput> outputMapper, CalcMapper calcMapper) {
+    public StepService(CalculatorRepository calculatorRepository,
+                       StepRepository stepRepository,
+                       CalculatorStepsRepository calculatorStepsRepository,
+                       @Qualifier("stepMapper") DtoMapper<Step, StepOutput> outputMapper,
+                       @Qualifier("calculatorMapper")  DtoMapper<Calculator, CalculatorOutput> calculatorOutputDtoMapper,
+                       CalcMapper calcMapper) {
         this.calculatorRepository = calculatorRepository;
         this.stepRepository = stepRepository;
         this.calculatorStepsRepository = calculatorStepsRepository;
         this.outputMapper = outputMapper;
+        this.calculatorOutputDtoMapper = calculatorOutputDtoMapper;
         this.calcMapper = calcMapper;
     }
 
@@ -105,5 +113,11 @@ public class StepService {
         Set<CalculatorStep> calculatorSteps = calculatorStepsRepository.findAllByCalculatorId(calculatorId);
         calculatorSteps.forEach(x -> x.setCalculator(null));
         calculatorStepsRepository.saveAll(calculatorSteps);
+    }
+
+    public Object getActiveSteps() {
+        Calculator calculator = calculatorRepository.findByStatus(CalculatorStatus.ACTIVE)
+                .orElseThrow(NotFoundCalculatorException::new);
+        return calcMapper.mapStepToOnlyStepList(calculator.getCalculatorSteps());
     }
 }
