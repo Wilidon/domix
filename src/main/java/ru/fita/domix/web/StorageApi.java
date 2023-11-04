@@ -24,12 +24,20 @@ public interface StorageApi {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Загружает файл и возвращает ссылку на файл. Максимальный размер файла - 10мб.",
+                    description = "Метод для загрузки изображения в S3-хранилище. " +
+                            "Возвращает ссылку на файл. Максимальный размер файла - 10мб.",
                     content = {
                             @Content(
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = StorageOutput.class))
-                    })
+                    }),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Ошибка на стороне сервера.",
+                    content = {
+                            @Content()
+                    }
+            )
     })
     @RequestMapping(value = "",
             method = RequestMethod.POST,
