@@ -26,6 +26,9 @@ public class CalculatorMapper implements DtoMapper<Calculator, CalculatorOutput>
         output.setId(model.getId());
         output.setName(model.getName());
         output.setStatus(model.getStatus());
+        if (model.getCalculatorSteps() == null) {
+            return output;
+        }
         output.setSteps(
                StreamReverser.reverse(
                                model.getCalculatorSteps()
