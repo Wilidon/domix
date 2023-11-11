@@ -8,5 +8,4 @@ public class DomixApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(DomixApplication.class, args);
 	}
-
 }

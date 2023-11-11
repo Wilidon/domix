@@ -23,6 +23,11 @@ public class Step {
     @NotBlank
     private String title;
 
+    @NotNull
+    @NotBlank
+    @Column(length = 2500)
+    private String description;
+
     private boolean multipleSelect = false;
 
     @OneToMany(mappedBy = "step")
