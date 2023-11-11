@@ -26,6 +26,7 @@ public class StepMapper implements DtoMapper<Step, StepOutput> {
         StepOutput stepOutput = new StepOutput();
         stepOutput.setId(model.getId());
         stepOutput.setTitle(model.getTitle());
+        stepOutput.setDescription(model.getDescription());
         stepOutput.setMultipleSelect(model.isMultipleSelect());
         stepOutput.setComponents(
                 model.getStepComponents()

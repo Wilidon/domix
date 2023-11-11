@@ -34,6 +34,7 @@ public class CalcMapper {
         StepOutput stepOutput = new StepOutput();
         stepOutput.setId(step.getId());
         stepOutput.setTitle(step.getTitle());
+        stepOutput.setDescription(step.getDescription());
         stepOutput.setMultipleSelect(step.isMultipleSelect());
 
         stepOutput.setComponents(this.mapComponentToList(step.getStepComponents()));

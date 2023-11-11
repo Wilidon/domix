@@ -9,6 +9,7 @@ import java.util.Set;
 public class StepOutput {
     private long id;
     private String title;
+    private String description;
     private boolean multipleSelect;
     private Set<ComponentOutput> components;
 }

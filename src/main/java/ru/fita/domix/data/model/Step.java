@@ -25,7 +25,7 @@ public class Step {
 
     @NotNull
     @NotBlank
-    @Column(length = 2500)
+    @Column(length = 2500, nullable = false)
     private String description;
 
     private boolean multipleSelect = false;
