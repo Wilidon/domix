@@ -63,6 +63,7 @@ public class CalcMapper {
         OnlyStepOutput stepOutput = new OnlyStepOutput();
         stepOutput.setId(step.getId());
         stepOutput.setTitle(step.getTitle());
+        stepOutput.setDescription(step.getDescription());
         stepOutput.setMultipleSelect(step.isMultipleSelect());
 
         return stepOutput;

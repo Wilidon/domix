@@ -6,5 +6,6 @@ import lombok.Data;
 public class OnlyStepOutput {
     private long id;
     private String title;
+    private String description;
     private boolean multipleSelect;
 }
