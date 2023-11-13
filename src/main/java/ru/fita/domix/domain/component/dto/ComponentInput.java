@@ -9,6 +9,8 @@ public class ComponentInput {
 
     private String title;
 
+    private String description;
+
     private String imageUrl;
 
     private float price;

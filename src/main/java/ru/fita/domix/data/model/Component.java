@@ -21,6 +21,9 @@ public class Component {
 
     private String title;
 
+    @Column(length = 500)
+    private String description;
+
     @NotNull
     @NotBlank
     private String imageUrl;

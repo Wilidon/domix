@@ -3,7 +3,7 @@ package ru.fita.domix.domain.calculator;
 import org.springframework.stereotype.Service;
 import ru.fita.domix.data.model.*;
 import ru.fita.domix.domain.calculator.dto.CalculatorOutput;
-import ru.fita.domix.domain.step.dto.ComponentOutput;
+import ru.fita.domix.domain.component.dto.ComponentOutput;
 import ru.fita.domix.domain.step.dto.OnlyStepOutput;
 import ru.fita.domix.domain.step.dto.StepOutput;
 
@@ -15,6 +15,7 @@ public class CalcMapper {
     public ComponentOutput mapToComponentOutput(Component component) {
         ComponentOutput componentOutput = new ComponentOutput();
         componentOutput.setId(component.getId());
+        componentOutput.setDescription(component.getDescription());
         componentOutput.setTitle(component.getTitle());
         componentOutput.setImageUrl(component.getImageUrl());
         componentOutput.setPrice(component.getPrice());

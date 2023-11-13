@@ -4,13 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.fita.domix.data.model.Component;
-import ru.fita.domix.data.model.Step;
-import ru.fita.domix.data.repository.*;
+import ru.fita.domix.data.repository.ComponentRepository;
+import ru.fita.domix.data.repository.StepComponentRepository;
 import ru.fita.domix.domain.calculator.CalcMapper;
 import ru.fita.domix.domain.component.dto.ComponentInput;
 import ru.fita.domix.domain.component.exceptions.NotFoundComponentException;
-import ru.fita.domix.domain.step.dto.ComponentOutput;
-
+import ru.fita.domix.domain.component.dto.ComponentOutput;
 import ru.fita.domix.domain.step.exceptions.AlreadyUsingException;
 import ru.fita.domix.domain.util.DtoMapper;
 
@@ -36,6 +35,7 @@ public class ComponentService {
     public ComponentOutput createComponent(ComponentInput componentInput){
         Component component = new Component();
         component.setTitle(componentInput.getTitle());
+        component.setDescription(componentInput.getDescription());
         component.setPrice(componentInput.getPrice());
         component.setImageUrl(componentInput.getImageUrl());
         component.setJobPrice(componentInput.getJobPrice());

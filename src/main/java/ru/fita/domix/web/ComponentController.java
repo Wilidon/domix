@@ -4,14 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.fita.domix.data.model.CalculatorStep;
 import ru.fita.domix.domain.component.ComponentService;
 import ru.fita.domix.domain.component.dto.ComponentInput;
-import ru.fita.domix.domain.step.StepService;
-import ru.fita.domix.domain.step.dto.ComponentOutput;
-import ru.fita.domix.domain.step.dto.OnlyStepOutput;
-import ru.fita.domix.domain.step.dto.StepInput;
-import ru.fita.domix.domain.step.dto.StepName;
+import ru.fita.domix.domain.component.dto.ComponentOutput;
 
 @RestController
 @RequestMapping("/components")

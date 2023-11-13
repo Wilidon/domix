@@ -2,6 +2,7 @@ package ru.fita.domix.domain.step.dto;
 
 
 import lombok.Data;
+import ru.fita.domix.domain.component.dto.ComponentOutput;
 
 import java.util.Set;
 

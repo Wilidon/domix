@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.fita.domix.data.model.Component;
 import ru.fita.domix.data.model.Step;
-import ru.fita.domix.domain.step.dto.ComponentOutput;
+import ru.fita.domix.domain.component.dto.ComponentOutput;
 import ru.fita.domix.domain.step.dto.StepOutput;
 import ru.fita.domix.domain.util.DtoMapper;
 
