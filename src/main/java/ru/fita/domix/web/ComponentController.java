@@ -9,8 +9,7 @@ import ru.fita.domix.domain.component.dto.ComponentInput;
 import ru.fita.domix.domain.component.dto.ComponentOutput;
 
 @RestController
-@RequestMapping("/components")
-public class ComponentController {
+public class ComponentController implements ComponentApi {
 
     private final ComponentService componentService;
 
@@ -20,20 +19,16 @@ public class ComponentController {
         this.componentService = componentService;
     }
 
-    @PostMapping("")
-    public ResponseEntity<ComponentOutput> createComponent(@RequestBody ComponentInput componentInput){
-        return new ResponseEntity<ComponentOutput>(componentService.createComponent(componentInput), HttpStatus.OK);
+    public ResponseEntity<ComponentOutput> createComponent(@RequestBody ComponentInput componentInput) {
+        return new ResponseEntity<>(componentService.createComponent(componentInput), HttpStatus.OK);
     }
 
-    @GetMapping("/{componentId}")
-    public ResponseEntity<?> getComponent(@PathVariable long componentId){
+    public ResponseEntity<?> getComponent(@PathVariable("componentId") long componentId) {
         return ResponseEntity.ok(componentService.getComponent(componentId));
     }
 
-    @DeleteMapping("/{componentId}")
-    public ResponseEntity<?> deleteComponent(@PathVariable long componentId){
+    public ResponseEntity<?> deleteComponent(@PathVariable("componentId") long componentId) {
         return ResponseEntity.ok(componentService.deleteComponent(componentId));
     }
 
-    //Тут что-то новое
 }

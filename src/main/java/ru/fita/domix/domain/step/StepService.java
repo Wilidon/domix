@@ -60,7 +60,7 @@ public class StepService {
     }
 
 
-    public StepOutput getStep(long stepId) {
+    public StepOutput getStep(long stepId, int area, int floors) {
         return outputMapper.toDto(stepRepository.findById(stepId).orElseThrow(NotFoundStepException::new));
     }
 

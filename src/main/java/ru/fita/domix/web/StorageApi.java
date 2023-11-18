@@ -19,7 +19,6 @@ import java.io.IOException;
 @Validated
 @RequestMapping("/storages")
 @Tag(name = "S3-хранилище")
-
 public interface StorageApi {
     @ApiResponses(value = {
             @ApiResponse(
