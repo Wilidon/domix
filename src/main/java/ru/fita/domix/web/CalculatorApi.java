@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.fita.domix.domain.calculator.dto.CalculatorInput;
@@ -134,7 +136,8 @@ public interface CalculatorApi {
                     }
             )
     })
-    ResponseEntity<CalculatorOutput> getActualCalc();
+    ResponseEntity<CalculatorOutput> getActualCalc(@RequestParam("area") @Min(1) @Max(999) int area,
+                                                   @RequestParam("floors") @Min(1) @Max(3) int floors);
 
     @GetMapping("/{id}/steps")
     ResponseEntity<Set<OnlyStepOutput>> getAllSteps(@PathVariable("id") long calculatorId);

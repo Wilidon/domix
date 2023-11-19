@@ -34,6 +34,10 @@ public class Component {
     @Min(value = 0)
     private float jobPrice;
 
+    @Min(value = 0)
+    @Column(nullable = true)
+    private int consumption;
+
     @OneToMany
     @JoinColumn(name = "step_id")
     @JsonBackReference

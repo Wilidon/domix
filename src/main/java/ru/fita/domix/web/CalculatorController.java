@@ -1,12 +1,12 @@
 package ru.fita.domix.web;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import ru.fita.domix.domain.calculator.CalculatorService;
 import ru.fita.domix.domain.calculator.dto.CalculatorInput;
 import ru.fita.domix.domain.calculator.dto.CalculatorOutput;
@@ -17,6 +17,7 @@ import java.util.Set;
 
 @RestController
 @CrossOrigin(origins = "*")
+@Validated
 public class CalculatorController implements CalculatorApi {
     private final CalculatorService calculatorService;
 
@@ -50,8 +51,9 @@ public class CalculatorController implements CalculatorApi {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public ResponseEntity<CalculatorOutput> getActualCalc() {
-        return ResponseEntity.ok(calculatorService.getCalculator());
+    public ResponseEntity<CalculatorOutput> getActualCalc(@RequestParam("area") @Min(1) @Max(999) int area,
+                                                          @RequestParam("floors") @Min(1) @Max(3) int floors) {
+        return ResponseEntity.ok(calculatorService.getCalculator(area, floors));
     }
 
     public ResponseEntity<Set<OnlyStepOutput>> getAllSteps(@PathVariable("id") long calculatorId) {

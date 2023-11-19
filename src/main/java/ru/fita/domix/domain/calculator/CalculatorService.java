@@ -1,7 +1,6 @@
 package ru.fita.domix.domain.calculator;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.fita.domix.data.model.Calculator;
@@ -10,7 +9,6 @@ import ru.fita.domix.data.model.CalculatorStep;
 import ru.fita.domix.data.model.Step;
 import ru.fita.domix.data.repository.CalculatorRepository;
 import ru.fita.domix.data.repository.CalculatorStepsRepository;
-import ru.fita.domix.data.repository.StepRepository;
 import ru.fita.domix.domain.calculator.dto.CalculatorInput;
 import ru.fita.domix.domain.calculator.dto.CalculatorOutput;
 import ru.fita.domix.domain.calculator.exceptions.NotFoundCalculatorException;
@@ -18,51 +16,38 @@ import ru.fita.domix.domain.exceptions.AlreadyBindedException;
 import ru.fita.domix.domain.exceptions.NotBindedException;
 import ru.fita.domix.domain.step.StepService;
 import ru.fita.domix.domain.step.dto.OnlyStepOutput;
-import ru.fita.domix.domain.util.DtoMapper;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class CalculatorService {
     private final CalculatorRepository calculatorRepository;
     private final CalculatorStepsRepository calculatorStepsRepository;
-    private final StepRepository stepRepository;
     private final StepService stepService;
-    private final DtoMapper<Calculator, CalculatorOutput> outputMapper;
-    private final CalcMapper calcMapper;
+    private final CalculatorMapper calculatorMapper;
 
-    @Autowired
-    public CalculatorService(CalculatorRepository calculatorRepository,
-                             CalculatorStepsRepository calculatorStepsRepository, StepRepository stepRepository, StepService stepService,
-                             @Qualifier("calculatorMapper") DtoMapper<Calculator, CalculatorOutput> outputMapper,
-                             CalcMapper calcMapper) {
-        this.calculatorRepository = calculatorRepository;
-        this.calculatorStepsRepository = calculatorStepsRepository;
-        this.stepRepository = stepRepository;
-        this.stepService = stepService;
-        this.outputMapper = outputMapper;
-        this.calcMapper = calcMapper;
-    }
 
-    public CalculatorOutput getCalculator() {
-        return outputMapper.toDto(calculatorRepository.findByStatus(CalculatorStatus.ACTIVE)
-                .orElseThrow(NotFoundCalculatorException::new));
+    public CalculatorOutput getCalculator(int area, int floors) {
+        Calculator calculator = calculatorRepository.findByStatus(CalculatorStatus.ACTIVE)
+                .orElseThrow(NotFoundCalculatorException::new);
+        return calculatorMapper.mapToDtoWithAreaAndFloors(calculator, area, floors);
     }
 
     public CalculatorOutput getById(long id) {
-        return outputMapper.toDto(calculatorRepository.findById(id)
+        return calculatorMapper.toDto(calculatorRepository.findById(id)
                 .orElseThrow(NotFoundCalculatorException::new));
     }
 
     public List<CalculatorOutput> getAll() {
-        return calculatorRepository.findAll().stream().map(outputMapper::toDto).collect(Collectors.toList());
+        return calculatorRepository.findAll().stream().map(calculatorMapper::toDto).collect(Collectors.toList());
     }
 
     public Set<OnlyStepOutput> getCalculatorSteps(long calculatorId) {
         Calculator calculator = calculatorRepository.findById(calculatorId).orElseThrow(NotFoundCalculatorException::new);
-        return calcMapper.mapStepToOnlyStepList(calculator.getCalculatorSteps());
+        return calculatorMapper.mapStepToOnlyStepList(calculator.getCalculatorSteps());
     }
 
     @Transactional
@@ -75,7 +60,7 @@ public class CalculatorService {
 
         calculatorRepository.save(calculator);
 
-        return outputMapper.toDto(calculator);
+        return calculatorMapper.toDto(calculator);
     }
 
     @Transactional
@@ -89,7 +74,7 @@ public class CalculatorService {
         calculator.setStatus(CalculatorStatus.ACTIVE);
         calculatorRepository.save(calculator);
 
-        return outputMapper.toDto(calculator);
+        return calculatorMapper.toDto(calculator);
 
     }
 
@@ -108,7 +93,7 @@ public class CalculatorService {
         calculator.setName(calculatorInput.getName());
         calculatorRepository.save(calculator);
 
-        return outputMapper.toDto(calculator);
+        return calculatorMapper.toDto(calculator);
     }
 
     @Transactional
