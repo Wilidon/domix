@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -43,5 +44,16 @@ public class Component {
     @JsonBackReference
     private Set<StepComponent> stepComponents;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Component component = (Component) o;
+        return id == component.id && Float.compare(price, component.price) == 0 && Float.compare(jobPrice, component.jobPrice) == 0 && consumption == component.consumption && Objects.equals(title, component.title) && Objects.equals(description, component.description) && Objects.equals(imageUrl, component.imageUrl);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, description, imageUrl, price, jobPrice, consumption);
+    }
 }

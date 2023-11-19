@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -28,6 +29,16 @@ public class Calculator {
     @OrderBy("order asc")
     private Set<CalculatorStep> calculatorSteps;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Calculator that = (Calculator) o;
+        return id == that.id && Objects.equals(name, that.name) && status == that.status && Objects.equals(calculatorSteps, that.calculatorSteps);
+    }
 
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, status, calculatorSteps);
+    }
 }

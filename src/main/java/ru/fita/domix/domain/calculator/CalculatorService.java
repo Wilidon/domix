@@ -11,12 +11,14 @@ import ru.fita.domix.data.repository.CalculatorRepository;
 import ru.fita.domix.data.repository.CalculatorStepsRepository;
 import ru.fita.domix.domain.calculator.dto.CalculatorInput;
 import ru.fita.domix.domain.calculator.dto.CalculatorOutput;
+import ru.fita.domix.domain.calculator.dto.CalculatorVersionOutput;
 import ru.fita.domix.domain.calculator.exceptions.NotFoundCalculatorException;
 import ru.fita.domix.domain.exceptions.AlreadyBindedException;
 import ru.fita.domix.domain.exceptions.NotBindedException;
 import ru.fita.domix.domain.step.StepService;
 import ru.fita.domix.domain.step.dto.OnlyStepOutput;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -61,6 +63,16 @@ public class CalculatorService {
         calculatorRepository.save(calculator);
 
         return calculatorMapper.toDto(calculator);
+    }
+
+
+    public CalculatorVersionOutput version() {
+        Calculator calculator = calculatorRepository.findByStatus(CalculatorStatus.ACTIVE)
+                .orElseThrow(NotFoundCalculatorException::new);
+        int hashCode = calculator.hashCode();
+        String version = Base64.getEncoder().encodeToString(Integer.toString(hashCode).getBytes());
+        return new CalculatorVersionOutput(version);
+
     }
 
     @Transactional

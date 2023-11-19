@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -38,4 +39,17 @@ public class Step {
     @OneToMany(mappedBy = "step")
     @JsonIgnore
     private Set<CalculatorStep> calculatorSteps;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Step step = (Step) o;
+        return id == step.id && multipleSelect == step.multipleSelect && Objects.equals(title, step.title) && Objects.equals(description, step.description) && Objects.equals(stepComponents, step.stepComponents);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, description, multipleSelect, stepComponents);
+    }
 }

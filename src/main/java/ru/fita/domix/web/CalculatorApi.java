@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.fita.domix.domain.calculator.dto.CalculatorInput;
 import ru.fita.domix.domain.calculator.dto.CalculatorOutput;
+import ru.fita.domix.domain.calculator.dto.CalculatorVersionOutput;
 import ru.fita.domix.domain.step.dto.OnlyStepOutput;
 
 import java.util.Set;
@@ -138,6 +139,26 @@ public interface CalculatorApi {
     })
     ResponseEntity<CalculatorOutput> getActualCalc(@RequestParam("area") @Min(1) @Max(999) int area,
                                                    @RequestParam("floors") @Min(1) @Max(3) int floors);
+
+    @GetMapping("/version")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Возвращает хэш калькулятора",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = CalculatorOutput.class))
+                    }),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Возвращает 404, если не существует ни одного активного калькулятора.",
+                    content = {
+                            @Content()
+                    }
+            )
+    })
+    ResponseEntity<CalculatorVersionOutput> version();
 
     @GetMapping("/{id}/steps")
     ResponseEntity<Set<OnlyStepOutput>> getAllSteps(@PathVariable("id") long calculatorId);

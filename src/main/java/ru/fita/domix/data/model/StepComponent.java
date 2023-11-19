@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Entity
 @Table
 @Getter
@@ -25,4 +27,17 @@ public class StepComponent {
 
     @Column(name = "\"order\"")
     private short order;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        StepComponent that = (StepComponent) o;
+        return order == that.order && Objects.equals(id, that.id) && Objects.equals(component, that.component);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, component, order);
+    }
 }

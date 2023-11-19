@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.fita.domix.domain.calculator.CalculatorService;
 import ru.fita.domix.domain.calculator.dto.CalculatorInput;
 import ru.fita.domix.domain.calculator.dto.CalculatorOutput;
+import ru.fita.domix.domain.calculator.dto.CalculatorVersionOutput;
 import ru.fita.domix.domain.step.dto.OnlyStepOutput;
 
 import java.util.Set;
@@ -54,6 +55,11 @@ public class CalculatorController implements CalculatorApi {
     public ResponseEntity<CalculatorOutput> getActualCalc(@RequestParam("area") @Min(1) @Max(999) int area,
                                                           @RequestParam("floors") @Min(1) @Max(3) int floors) {
         return ResponseEntity.ok(calculatorService.getCalculator(area, floors));
+    }
+
+    @Override
+    public ResponseEntity<CalculatorVersionOutput> version() {
+        return ResponseEntity.ok(calculatorService.version());
     }
 
     public ResponseEntity<Set<OnlyStepOutput>> getAllSteps(@PathVariable("id") long calculatorId) {
