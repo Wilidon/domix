@@ -148,7 +148,7 @@ public interface CalculatorApi {
                     content = {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = CalculatorOutput.class))
+                                    schema = @Schema(implementation = CalculatorVersionOutput.class))
                     }),
             @ApiResponse(
                     responseCode = "404",
